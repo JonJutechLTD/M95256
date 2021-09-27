@@ -1,9 +1,9 @@
 /*******************************************************************************
 
- M95M01 SPI EEPROM library
+ M95256 SPI EEPROM library
  -------------------------
  
- M95M01.cpp - M95M01 class implementation file
+ M95256.cpp - M95256 class implementation file
  
  Code written by Stefan Dzisiewski-Smith.
  
@@ -29,7 +29,7 @@
 
 *******************************************************************************/
 
-#include "M95M01.h"
+#include "M95256.h"
 #include <Arduino.h>
 
 const uint8_t CMD_WRSR  = 0x01;  // write status register
@@ -47,10 +47,10 @@ const uint8_t BIT_SRWD  = 7;	 // status register write disable
 
 const uint8_t WRITE_TIMEOUT_MS = 10; // a write should only ever take 5 ms max
 
-M95M01_t::M95M01_t(){
+M95256_t::M95256_t(){
 }
 
-void M95M01_t::begin(uint8_t CS_pin, uint32_t speed_Hz){
+void M95256_t::begin(uint8_t CS_pin, uint32_t speed_Hz){
 	this->CS_pin = CS_pin;
 	pinMode(this->CS_pin, OUTPUT);
 	digitalWrite(this->CS_pin, HIGH);
@@ -61,7 +61,7 @@ void M95M01_t::begin(uint8_t CS_pin, uint32_t speed_Hz){
 }
 
 
-uint8_t M95M01_t::write_byte(uint32_t address, uint8_t value){
+uint8_t M95256_t::write_byte(uint32_t address, uint8_t value){
 
 	// returns 0 is the write was successful
 	// returns 1 if the write timed out and hence was not successful
@@ -94,7 +94,7 @@ uint8_t M95M01_t::write_byte(uint32_t address, uint8_t value){
 	return(0); // success
 }
 
-uint8_t M95M01_t::read_byte(uint32_t address){
+uint8_t M95256_t::read_byte(uint32_t address){
 
 	// returns the value of the requested byte if the read was successful
 	// returns 0 if the read timed out and was not successful (ambiguous)
@@ -124,7 +124,7 @@ uint8_t M95M01_t::read_byte(uint32_t address){
 	return(scratch);
 }
 
-uint8_t M95M01_t::write_array(uint32_t address, uint8_t value_array[], const uint32_t array_length){
+uint8_t M95256_t::write_array(uint32_t address, uint8_t value_array[], const uint32_t array_length){
 
 	// returns 0 is the write was successful
 	// returns 1 if the write timed out and hence was not successful
@@ -171,7 +171,7 @@ uint8_t M95M01_t::write_array(uint32_t address, uint8_t value_array[], const uin
 	return(0); // success
 }
 
-uint8_t M95M01_t::read_array(uint32_t address, uint8_t value_array[], const uint32_t array_length){
+uint8_t M95256_t::read_array(uint32_t address, uint8_t value_array[], const uint32_t array_length){
 
 	// returns 0 is the read was successful
 	// returns 1 if the read timed out and hence was not successful
@@ -204,7 +204,7 @@ uint8_t M95M01_t::read_array(uint32_t address, uint8_t value_array[], const uint
 	return(0);
 }
 
-uint32_t M95M01_t::page(uint32_t address){
+uint32_t M95256_t::page(uint32_t address){
 	if(address < (uint32_t)page_size){
 		return(0);
 	} else {
@@ -212,11 +212,11 @@ uint32_t M95M01_t::page(uint32_t address){
 	}
 }
 
-uint8_t M95M01_t::page_address(uint32_t address){
+uint8_t M95256_t::page_address(uint32_t address){
 
 	return(address % page_size);
 
 }
 
 
-M95M01_t M95M01 = M95M01_t();
+M95256_t M95256 = M95256_t();
