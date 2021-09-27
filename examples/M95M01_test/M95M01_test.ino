@@ -1,9 +1,9 @@
 /*******************************************************************************
 
- M95M01 SPI EEPROM library
+M95256 SPI EEPROM library
  -------------------------
  
- M95M01_test.ino - M95M01 test sketch
+ M95256_test.ino - M95256 test sketch
  
  Code written by Stefan Dzisiewski-Smith.
  
@@ -20,7 +20,7 @@
 
 *******************************************************************************/
 
-#include "M95M01.h"
+#include "M95256.h"
 
 const uint8_t CS = 2; // connect EEPROM CS pin to D2 on Arduino
 const uint32_t unaligned_array_length = 881; // prime number to avoid page alignment
@@ -35,7 +35,7 @@ uint8_t test_array[unaligned_array_length];
 
 void setup() {
 
-  M95M01.begin(CS, 2000000); // I have limited this to a 2MHz clock speed, but feel free to increase
+  M95256.begin(CS, 2000000); // I have limited this to a 2MHz clock speed, but feel free to increase
 
   Serial.begin(115200);
 
@@ -60,12 +60,12 @@ void loop() {
 
   Serial.println(F("zeros:"));
 
-  for(i=0; i<M95M01.num_bytes/aligned_array_length; i++){
+  for(i=0; i<M95256.num_bytes/aligned_array_length; i++){
       
     Serial.print(F("."));
     
-    M95M01.write_array(i*aligned_array_length, test_array, aligned_array_length);
-    M95M01.read_array(i*aligned_array_length, readback, aligned_array_length);
+    M95256.write_array(i*aligned_array_length, test_array, aligned_array_length);
+    M95256.read_array(i*aligned_array_length, readback, aligned_array_length);
 
     for(j=0; j<aligned_array_length; j++){
       if(readback[j]!=0){
@@ -104,12 +104,12 @@ void loop() {
 
   Serial.println(F("page-aligned array:"));
 
-  for(i=0; i<M95M01.num_bytes/aligned_array_length; i++){
+  for(i=0; i<M95256.num_bytes/aligned_array_length; i++){
       
     Serial.print(F("."));
     
-    M95M01.write_array(i*aligned_array_length, test_array, aligned_array_length);
-    M95M01.read_array(i*aligned_array_length, readback, aligned_array_length);
+    M95256.write_array(i*aligned_array_length, test_array, aligned_array_length);
+    M95256.read_array(i*aligned_array_length, readback, aligned_array_length);
 
     for(j=0; j<aligned_array_length; j++){
       if(readback[j]!=test_array[j]){
@@ -150,16 +150,16 @@ void loop() {
 
   Serial.println(F("non-aligned array:"));  
 
-  for(i=0; i<1+(M95M01.num_bytes/unaligned_array_length); i++){ 
+  for(i=0; i<1+(M95256.num_bytes/unaligned_array_length); i++){ 
     Serial.print(F("."));
-    if(i<M95M01.num_bytes/unaligned_array_length){
+    if(i<M95256.num_bytes/unaligned_array_length){
       array_limit = unaligned_array_length;
     } else {
-      array_limit = M95M01.num_bytes - (i*unaligned_array_length);
+      array_limit = M95256.num_bytes - (i*unaligned_array_length);
     }
 
-    M95M01.write_array(i*unaligned_array_length, test_array, array_limit);
-    M95M01.read_array(i*unaligned_array_length, readback, array_limit);
+    M95256.write_array(i*unaligned_array_length, test_array, array_limit);
+    M95256.read_array(i*unaligned_array_length, readback, array_limit);
 
     for(j=0; j<array_limit; j++){
       if(readback[j]!=test_array[j]){
